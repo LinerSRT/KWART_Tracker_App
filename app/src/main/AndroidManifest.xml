@@ -16,41 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Main.MainActivity"
-            android:theme="@style/AppTheme.Fullscreen"></activity>
         <activity
-            android:name=".LoginRegister.EnterPhoneNumberActivity"
-            android:label="Укажите ваш номер телефона"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="InnerclassSeparator" />
-        <activity
-            android:name=".LoginRegister.CreatePasswordActivity"
-            android:label="Создайте пароль"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="InnerclassSeparator" />
-        <activity
-            android:name=".LoginRegister.EnterEmailActivity"
-            android:label="Обеспечьте безопасность своего аккаунта"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="InnerclassSeparator" />
+            android:name=".Main.MainActivity"
+            android:theme="@style/AppTheme.Fullscreen" />
         <activity
             android:name=".LoginRegister.CreateProfileActivity"
-            android:label="Ваш профиль"
+            android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".LoginRegister.CircleConfigActivity"
-            android:label="Ваш круг"
+            android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
             android:name=".LoginRegister.InviteCodeActivity"
-            android:label="Код приглашения"
+            android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator" />
@@ -61,7 +44,6 @@
             android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

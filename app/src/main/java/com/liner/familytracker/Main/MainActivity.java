@@ -35,26 +35,26 @@ public class MainActivity extends CoreActivity {
 
 
 
-        Button bv = findViewById(R.id.safagasgasg);
-        new MaterialIntroView.Builder(this)
-                .enableDotAnimation(true)
-                .enableIcon(false)
-                .setFocusGravity(FocusGravity.CENTER)
-                .setFocusType(Focus.MINIMUM)
-                .setDelayMillis(500)
-                .enableFadeAnimation(true)
-                .performClick(true)
-                .setInfoText("Hi There! Click this card and see what happens.")
-                .setTarget(bv)
-                .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
-                .show();
-//
-        bv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-            }
-        });
+        //Button bv = findViewById(R.id.safagasgasg);
+        //new MaterialIntroView.Builder(this)
+        //        .enableDotAnimation(true)
+        //        .enableIcon(false)
+        //        .setFocusGravity(FocusGravity.CENTER)
+        //        .setFocusType(Focus.MINIMUM)
+        //        .setDelayMillis(500)
+        //        .enableFadeAnimation(true)
+        //        .performClick(true)
+        //        .setInfoText("Hi There! Click this card and see what happens.")
+        //        .setTarget(bv)
+        //        .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
+        //        .show();
+////
+        //bv.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        firebaseAuth.signOut();
+        //    }
+        //});
     }
 
     @Override

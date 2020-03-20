@@ -30,16 +30,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.storage.FirebaseStorage;
+import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.LoginRegister.CreateProfileActivity;
-import com.liner.familytracker.LoginRegister.EnterEmailActivity;
 import com.liner.familytracker.Main.MainActivity;
 
 import java.util.regex.Pattern;
 
 public class SplashActivity extends AppCompatActivity {
-    private LinearLayout headerLayout, signInLayout, signUpLayout;
+    private LinearLayout signInLayout, signUpLayout;
     private FirebaseAuth firebaseAuth;
     public FirebaseDatabase firebaseDatabase;
     public DatabaseReference usersDatabase, currentUserDatabase;
@@ -48,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
     private EditText loginEmail, loginPassword;
     private ImageButton loginShowPassword;
     private Button loginButton;
-    private TextView toRegisterLayout, forgotPassword;
     boolean emailFieldCorrect = false;
     boolean passwordFieldCorrect = false;
 
@@ -56,7 +53,6 @@ public class SplashActivity extends AppCompatActivity {
     private EditText registerEmail, registerPassword, registerPhone;
     private ImageButton registerShowPassword;
     private Button registerButton;
-    private TextView toLoginLayout;
     boolean registerEmailFieldCorrect = false;
     boolean registerPasswordFieldCorrect = false;
     boolean registerPhoneFieldCorrect = false;
@@ -69,26 +65,22 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null){
-            firebaseAuth.signOut();
-        }
         firebaseDatabase = FirebaseDatabase.getInstance();
         usersDatabase = firebaseDatabase.getReference().child("Users");
-        headerLayout = findViewById(R.id.headerLayout);
         signInLayout = findViewById(R.id.signInLayout);
         signUpLayout = findViewById(R.id.signUpLayout);
         loginEmail = findViewById(R.id.signEmailField);
         loginPassword = findViewById(R.id.signPasswordField);
         loginShowPassword = findViewById(R.id.signShowPassword);
         loginButton = findViewById(R.id.loginButton);
-        toRegisterLayout = findViewById(R.id.toRegisterLayout);
-        forgotPassword = findViewById(R.id.forgotPassword);
+        TextView toRegisterLayout = findViewById(R.id.toRegisterLayout);
+        TextView forgotPassword = findViewById(R.id.forgotPassword);
         registerEmail = findViewById(R.id.signUpEmailField);
         registerPassword = findViewById(R.id.signUpPasswordField);
         registerPhone = findViewById(R.id.sighUpPhoneField);
         registerShowPassword = findViewById(R.id.signUpShowPassword);
         registerButton = findViewById(R.id.continueRegistrationButton);
-        toLoginLayout = findViewById(R.id.toLoginLayout);
+        TextView toLoginLayout = findViewById(R.id.toLoginLayout);
         toRegisterLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,16 +135,20 @@ public class SplashActivity extends AppCompatActivity {
                 });
             }
         });
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                signInLayout.setAlpha(0);
-                signInLayout.setVisibility(View.VISIBLE);
-                signInLayout.animate().alpha(1f).setDuration(500);
-            }
-        }, 700);
-
+        if(firebaseAuth.getCurrentUser() != null && !firebaseAuth.getCurrentUser().isAnonymous()){
+            checkCurrentUser();
+        } else {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    signInLayout.setAlpha(0);
+                    signInLayout.setVisibility(View.VISIBLE);
+                    signInLayout.animate().alpha(1f).setDuration(500);
+                }
+            }, 700);
+            firebaseAuth.signOut();
+        }
 
         {
             createEditTextValidation(loginEmail, "[a-zA-Z0-9]*@[a-zA-Z0-9]*.(com|ru|net)", new IEditTextListener() {
@@ -259,6 +255,7 @@ public class SplashActivity extends AppCompatActivity {
                                 signInDialog.dismiss();
                                 if (task.isSuccessful()) {
                                     //todo login success
+                                    startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                 } else {
                                     //todo wrong email or password
                                     runOnUiThread(new Runnable() {
@@ -381,6 +378,7 @@ public class SplashActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if(task.isSuccessful()){
+                                                firebaseAuth.signOut();
                                                 firebaseAuth.signInWithEmailAndPassword(registerEmail.getText().toString().trim(), registerPassword.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -391,8 +389,9 @@ public class SplashActivity extends AppCompatActivity {
                                                             currentUserDatabase.child("userEmail").setValue(registerEmail.getText().toString().trim());
                                                             currentUserDatabase.child("userPassword").setValue(registerPassword.getText().toString().trim());
                                                             currentUserDatabase.child("phoneNumber").setValue(registerPhone.getText().toString().trim());
+                                                            currentUserDatabase.child("inviteCode").setValue(UserModel.generateInviteCode());
                                                             registerDialog.dismiss();
-                                                            //todo write to firebase db then start profile edit act
+                                                            startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                                         } else {
                                                             //todo login failed
                                                             registerDialog.dismiss();
@@ -432,7 +431,84 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+    private void checkCurrentUser(){
+        final MaterialDialog checkAccountDialog = new MaterialDialog.Builder(SplashActivity.this)
+                .content("Подождите...")
+                .cancelable(false)
+                .progressIndeterminateStyle(true)
+                .widgetColor(getResources().getColor(R.color.accent_color))
+                .progress(true, 0).build();
+        checkAccountDialog.show();
+        Query query = usersDatabase.orderByChild("UID").equalTo(firebaseAuth.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    String value = (String) child.child("UID").getValue();
+                    if(value.equals(firebaseAuth.getCurrentUser().getUid()) && !value.equals("")){
+                        if(child.hasChild("registerFinished")){
+                            if(!child.child("registerFinished").getValue().toString().equals("true")){
+                                firebaseAuth.signInWithEmailAndPassword(child.child("userEmail").getValue().toString(), child.child("userPassword").getValue().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful()) {
+                                            startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                        } else {
+                                            checkAccountDialog.dismiss();
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    signInLayout.setAlpha(0);
+                                                    signInLayout.setVisibility(View.VISIBLE);
+                                                    signInLayout.animate().alpha(1f).setDuration(500);
+                                                }
+                                            }, 700);
+                                            firebaseAuth.signOut();
+                                        }
+                                    }
+                                });
+                            } else {
+                                startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            }
+                        } else {
+                            startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        }
+                        return;
+                    } else {
+                        checkAccountDialog.dismiss();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                signInLayout.setAlpha(0);
+                                signInLayout.setVisibility(View.VISIBLE);
+                                signInLayout.animate().alpha(1f).setDuration(500);
+                            }
+                        }, 700);
+                        firebaseAuth.signOut();
+                        return;
+                    }
+                }
+                checkAccountDialog.dismiss();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        signInLayout.setAlpha(0);
+                        signInLayout.setVisibility(View.VISIBLE);
+                        signInLayout.animate().alpha(1f).setDuration(500);
+                    }
+                }, 700);
+                firebaseAuth.signOut();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void createEditTextValidation(EditText editText, final String regex, final IEditTextListener listener){
         editText.addTextChangedListener(new TextWatcher() {
@@ -461,95 +537,4 @@ public class SplashActivity extends AppCompatActivity {
         void onValid();
         void onNotValid();
     }
-
-    public boolean validCellPhone(String number){
-        return number.matches("^[+][0-9]{12}$");
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void old(){
-        if(firebaseAuth.getCurrentUser() != null && !firebaseAuth.getCurrentUser().isAnonymous()){
-            startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
-        } else {
-            firebaseAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    //float measuredHeight = (float) findViewById(R.id.main_layout).getMeasuredHeight();
-                    //float a = ((((float) 50) * getResources().getDisplayMetrics().density) + 0.5f);
-                    //logoLayout.animate().setDuration(500).y(a).setListener(new Animator.AnimatorListener() {
-                    //    @Override
-                    //    public void onAnimationStart(Animator animator) {
-//
-                    //    }
-//
-                    //    @Override
-                    //    public void onAnimationEnd(Animator animator) {
-                    //        contentLayout.setAlpha(0.0f);
-                    //        loginView.setAlpha(0f);
-                    //        contentLayout.setVisibility(View.VISIBLE);
-                    //        loginView.setVisibility(View.VISIBLE);
-                    //        contentLayout.animate().alpha(1.0f).setDuration(500);
-                    //        loginView.animate().alpha(1.0f).setDuration(500);
-//
-                    //    }
-//
-                    //    @Override
-                    //    public void onAnimationCancel(Animator animator) {
-//
-                    //    }
-//
-                    //    @Override
-                    //    public void onAnimationRepeat(Animator animator) {
-//
-                    //    }
-                    //});
-                    //contentLayout.getLayoutParams().height = (int) ((measuredHeight - ((float) contentLayout.getMeasuredHeight())) - a);
-                    //startRegistrationView.setOnClickListener(new View.OnClickListener() {
-                    //    @Override
-                    //    public void onClick(View view) {
-                    //        startActivity(new Intent(SplashActivity.this, EnterPhoneNumberActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    //    }
-                    //});
-                }
-            });
-
-        }
-    }
-    //@Override
-    //public final WindowInsets onApplyWindowInsets(WindowInsets insets) {
-    //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-    //        return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(0, 0, 0,
-    //                insets.getSystemWindowInsetBottom()));
-    //    } else {
-    //        return insets;
-    //    }
-    //}
 }

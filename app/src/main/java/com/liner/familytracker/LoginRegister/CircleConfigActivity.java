@@ -77,10 +77,18 @@ public class CircleConfigActivity extends CoreActivity {
                 circleModel.setCircleName("Семья");
                 circleModel.setCricleUID(CircleModel.generateCircleUID());
                 circleModel.setJoinedUsers(userModels);
+                CircleModel circleModel2 = new CircleModel();
+                circleModel2.setCircleName("Семья 2");
+                circleModel2.setCricleUID(CircleModel.generateCircleUID());
+                circleModel.setJoinedUsers(userModels);
                 UserJoinedCircles userJoinedCircles = new UserJoinedCircles();
                 userJoinedCircles.setCircleName(circleModel.getCircleName());
                 userJoinedCircles.setCircleUID(circleModel.getCricleUID());
+                UserJoinedCircles userJoinedCircles2 = new UserJoinedCircles();
+                userJoinedCircles2.setCircleName(circleModel2.getCircleName());
+                userJoinedCircles2.setCircleUID(circleModel2.getCricleUID());
                 joinedCircles.add(userJoinedCircles);
+                joinedCircles.add(userJoinedCircles2);
                 currentUserDatabase.child("joinedCircles").setValue(userJoinedCircles);
                 circlesDatabase.child(circleModel.getCricleUID()).setValue(circleModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

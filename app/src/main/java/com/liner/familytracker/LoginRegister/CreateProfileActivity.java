@@ -18,10 +18,13 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.liner.familytracker.ColorUtils;
@@ -48,18 +51,31 @@ public class CreateProfileActivity extends CoreActivity {
     private RelativeLayout addPhotoLayout;
     boolean nameValid = false;
     boolean photoUploaded = false;
+
+    private MaterialDialog uploadPhotoProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+        currentUserDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (firebaseUser != null && !firebaseUser.isAnonymous()) {
+                    userModel = dataSnapshot.getValue(UserModel.class);
+                    onUserDataChanged(userModel);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         nameField = findViewById(R.id.nameEditText);
         nextStep = findViewById(R.id.nextStep);
         profilePhoto = findViewById(R.id.profilePhotoView);
         addPhotoView = findViewById(R.id.addPhotoView);
         addPhotoLayout = findViewById(R.id.addPhotoLayout);
         mapPhotoView = findViewById(R.id.mapPhotoView);
-
-
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -96,77 +112,34 @@ public class CreateProfileActivity extends CoreActivity {
             public void onClick(View view) {
                 if(nameValid){
                     if(!photoUploaded){
-                        //final LDialogUtility dialogUtility = new LDialogUtility(CreateProfileActivity.this);
-                        //dialogUtility.createSimpleDialog(null, "Внимание!", "Без фото вас будет труднее найти на карте. Продолжить?", "Да", new View.OnClickListener() {
-                        //    @Override
-                        //    public void onClick(View view) {
-                        //        final LDialogUtility progressDialog = new LDialogUtility(CreateProfileActivity.this);
-                        //        progressDialog.createProgressDialog("Создание аккаунта...");
-                        //        progressDialog.show();
-                        //        currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        //            @Override
-                        //            public void onComplete(@NonNull Task<Void> task) {
-                        //                firebaseAuth.createUserWithEmailAndPassword(getIntent().getStringExtra("email"), getIntent().getStringExtra("password")).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        //                    @Override
-                        //                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //                        currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        //                            @Override
-                        //                            public void onComplete(@NonNull Task<Void> task) {
-                        //                                firebaseAuth.signInWithEmailAndPassword(getIntent().getStringExtra("email"), getIntent().getStringExtra("password")).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        //                                    @Override
-                        //                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //                                        progressDialog.close();
-                        //                                        startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        //                                                .putExtra("password", getIntent().getStringExtra("password"))
-                        //                                                .putExtra("phone_number", getIntent().getStringExtra("phone_number"))
-                        //                                                .putExtra("email", getIntent().getStringExtra("email"))
-                        //                                                .putExtra("userName", nameField.getText().toString().trim()));
-                        //                                    }
-                        //                                });
-                        //                            }
-                        //                        });
-                        //                    }
-                        //                });
-                        //            }
-                        //        });
-                        //    }
-                        //}, "Остаться", new View.OnClickListener() {
-                        //    @Override
-                        //    public void onClick(View view) {
-                        //        dialogUtility.close();
-                        //    }
-                        //});
-                        //dialogUtility.show();
+                        new MaterialDialog.Builder(CreateProfileActivity.this)
+                                .title("Внимание!")
+                                .content("Без фото вас будет труднее найти на карте. Продолжить?")
+                                .positiveText("Ок")
+                                .negativeText("Остаться")
+                                .positiveColor(getResources().getColor(R.color.text_color))
+                                .negativeColor(getResources().getColor(R.color.accent_color))
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim());
+                                        currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                            }
+                                        });
+                                    }
+                                })
+                                .show();
                     } else {
-                        //final LDialogUtility progressDialog = new LDialogUtility(CreateProfileActivity.this);
-                        //progressDialog.createProgressDialog("Создание аккаунта...");
-                        //progressDialog.show();
-                        //currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        //    @Override
-                        //    public void onComplete(@NonNull Task<Void> task) {
-                        //        firebaseAuth.createUserWithEmailAndPassword(getIntent().getStringExtra("email"), getIntent().getStringExtra("password")).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        //            @Override
-                        //            public void onComplete(@NonNull Task<AuthResult> task) {
-                        //                currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        //                    @Override
-                        //                    public void onComplete(@NonNull Task<Void> task) {
-                        //                        firebaseAuth.signInWithEmailAndPassword(getIntent().getStringExtra("email"), getIntent().getStringExtra("password")).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        //                            @Override
-                        //                            public void onComplete(@NonNull Task<AuthResult> task) {
-                        //                                progressDialog.close();
-                        //                                startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        //                                        .putExtra("password", getIntent().getStringExtra("password"))
-                        //                                        .putExtra("phone_number", getIntent().getStringExtra("phone_number"))
-                        //                                        .putExtra("email", getIntent().getStringExtra("email"))
-                        //                                        .putExtra("userName", nameField.getText().toString().trim()));
-                        //                            }
-                        //                        });
-                        //                    }
-                        //                });
-                        //            }
-                        //        });
-                        //    }
-                        //});
+                        currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim());
+                        currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            }
+                        });
                     }
                  }
             }
@@ -222,9 +195,14 @@ public class CreateProfileActivity extends CoreActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //uploadPhotoDialog = new LDialogUtility(CreateProfileActivity.this);
-                //uploadPhotoDialog.createProgressDialog("Загрузка фото...");
-                //uploadPhotoDialog.show();
+                uploadPhotoProgressDialog = new MaterialDialog.Builder(CreateProfileActivity.this)
+                        .title("Загрузка")
+                        .content("Подождите, фото загружается")
+                        .progressIndeterminateStyle(true)
+                        .cancelable(false)
+                        .widgetColor(getResources().getColor(R.color.accent_color))
+                        .progress(true, 0).build();
+                uploadPhotoProgressDialog.show();
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                 final byte[] thumb_byte = byteArrayOutputStream.toByteArray();
@@ -245,7 +223,6 @@ public class CreateProfileActivity extends CoreActivity {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-
             StorageReference filepath = storageReference.child("user_photos").child(firebaseUser.getUid() + ".jpg");
             UploadTask uploadTask = filepath.putBytes(photoBytes);
             uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -257,7 +234,7 @@ public class CreateProfileActivity extends CoreActivity {
                             public void onComplete(@NonNull final Task<Uri> task) {
                                 currentUserDatabase.child("photoUrl").setValue(task.getResult().toString());
                                 photoUploaded = true;
-                                //uploadPhotoDialog.close();
+                                uploadPhotoProgressDialog.dismiss();
                             }
                         });
                     }
