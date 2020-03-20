@@ -2,9 +2,11 @@ package com.liner.familytracker;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
     private EditText loginEmail, loginPassword;
     private ImageButton loginShowPassword;
     private Button loginButton;
-    private TextView toRegisterLayout;
+    private TextView toRegisterLayout, forgotPassword;
     boolean emailFieldCorrect = false;
     boolean passwordFieldCorrect = false;
 
@@ -61,6 +63,7 @@ public class SplashActivity extends AppCompatActivity {
         loginShowPassword = findViewById(R.id.signShowPassword);
         loginButton = findViewById(R.id.loginButton);
         toRegisterLayout = findViewById(R.id.toRegisterLayout);
+        forgotPassword = findViewById(R.id.forgotPassword);
         registerEmail = findViewById(R.id.signUpEmailField);
         registerPassword = findViewById(R.id.signUpPasswordField);
         registerPhone = findViewById(R.id.sighUpPhoneField);
@@ -164,16 +167,93 @@ public class SplashActivity extends AppCompatActivity {
                 loginButton.setBackgroundColor(ColorUtils.getThemeColor(SplashActivity.this, R.attr.backgroundColorDark));
             }
         });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(emailFieldCorrect){
+                    firebaseAuth.sendPasswordResetEmail(loginEmail.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                new MaterialDialog.Builder(SplashActivity.this)
+                                        .title("Восстановление пароля!")
+                                        .content("На ваш эл. адрес была выслана инструкция по восстановлению пароля")
+                                        .positiveText("Ок")
+                                        .positiveColorRes(R.color.accent_color)
+                                        .show();
+                            } else {
+                                new MaterialDialog.Builder(SplashActivity.this)
+                                        .title("Ошибка!")
+                                        .content("Упс, что-то пошло не так. Побробуйте позже")
+                                        .positiveText("Ок")
+                                        .positiveColorRes(R.color.accent_color)
+                                        .show();
+                            }
+                        }
+                    });
+                } else {
+                    new MaterialDialog.Builder(SplashActivity.this)
+                            .title("Внимание!")
+                            .content("Введите корректный адрес эл. почты!")
+                            .positiveText("Ок")
+                            .positiveColorRes(R.color.accent_color)
+                            .show();
+                }
+            }
+        });
+        loginShowPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(loginPassword.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD){
+                    loginPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        loginShowPassword.setColorFilter(getColor(R.color.text_color));
+                    } else {
+                        loginShowPassword.setColorFilter(getResources().getColor(R.color.text_color));
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        loginShowPassword.setColorFilter(getColor(R.color.accent_color));
+                    } else {
+                        loginShowPassword.setColorFilter(getResources().getColor(R.color.accent_color));
+                    }
+                    loginPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                }
+                loginPassword.setSelection(loginPassword.length());
+            }
+        });
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(emailFieldCorrect && passwordFieldCorrect){
+                    final MaterialDialog signInDialog = new MaterialDialog.Builder(SplashActivity.this)
+                            .title("Вход")
+                            .content("Выполняется вход, подождите")
+                            .progressIndeterminateStyle(true)
+                            .widgetColor(getResources().getColor(R.color.accent_color))
+                            .progress(true, 0).build();
+                    signInDialog.show();
                     firebaseAuth.signInWithEmailAndPassword(loginEmail.getText().toString().trim(), loginPassword.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            signInDialog.dismiss();
                             if(task.isSuccessful()){
-                                //todo login success
-
+                                if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                    //todo login success
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new MaterialDialog.Builder(SplashActivity.this)
+                                                    .title("Внимание!")
+                                                    .content("Подтвердите свой адрес эл. почты!")
+                                                    .positiveText("Ок")
+                                                    .positiveColorRes(R.color.accent_color)
+                                                    .show();
+                                        }
+                                    });
+                                }
                             } else {
                                 //todo wrong email or password
                                 runOnUiThread(new Runnable() {
