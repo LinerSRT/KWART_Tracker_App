@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginRegister.CreatePasswordActivity">
+
+    <ProgressBar
+        android:id="@+id/registerProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:max="100"
+        android:progress="75"
+        android:progressTint="?colorPrimary"
+        android:secondaryProgressTint="?backgroundColorDark"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/addPhotoLayout"
+            android:layout_width="100dp"
+            android:layout_height="100dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePhotoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/account_round" />
+
+            <ImageView
+                android:id="@+id/addPhotoView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_add_circle_black_24dp" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:drawableLeft="@drawable/ic_info_black_24dp"
+            android:drawableTint="?textColor"
+            android:gravity="center"
+            android:text="Добавьте свое фото, что бы вас было легче найти на карте"
+            android:textColorLink="?colorPrimary"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Укажите свое имя"
+            android:inputType="textEmailAddress"
+            android:textSize="22sp"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:drawableLeft="@drawable/ic_info_black_24dp"
+            android:drawableTint="?textColor"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:text="Вот как вы будете отображаться на карте"
+            android:textColorLink="?colorPrimary"
+            android:textSize="12sp" />
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/map_bg" />
+
+            <RelativeLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_location_on_black_24dp"
+                    android:tint="?colorPrimary" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/circle_bg" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/mapPhotoView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="3dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/account_round" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/nextStep"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="?backgroundColorDark"
+        android:text="Далее"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    
+</androidx.constraintlayout.widget.ConstraintLayout>

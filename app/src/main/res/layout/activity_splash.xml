@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:id="@+id/main_layout"
+    android:animateLayoutChanges="true"
+    android:gravity="center"
+    android:fitsSystemWindows="true"
+    android:windowSoftInputMode="adjustPan"
+    android:orientation="vertical"
+    tools:context=".SplashActivity">
+
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/logoView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/app_drawable" />
+
+        <TextView
+            android:id="@+id/appNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Family Locator"
+            android:textColor="?textColor"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/appDescriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Можно посмотреть, где находятся ваши друзья и близкие, в любое время и в любом месте"
+            android:textColor="?textColor"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appNameText" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/signInLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <EditText
+            android:id="@+id/signEmailField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableStart="@drawable/email_icon"
+            android:textSize="22sp"
+            android:layout_marginBottom="20dp"
+            android:hint="Укажите свой адрес эл. почты"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/signPasswordField"
+                style="@style/EditTextTheme"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="Пароль"
+                android:drawableStart="@drawable/pass_icon"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:inputType="textPassword" />
+
+            <ImageButton
+                android:id="@+id/signShowPassword"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:src="@drawable/show_pass_icon"
+                android:tint="@color/text_color" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_info_black_24dp"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:text="Пароль должен быть не менее 6 символов"
+            android:textColorLink="?colorPrimary"
+            android:drawablePadding="10dp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Забыли пароль?"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?backgroundColorDark"
+            android:text="Войти"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/toRegisterLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Регистрация"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="?colorPrimary"
+            android:textStyle="bold"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:drawableStart="@drawable/ic_person_add_black_24dp"
+            android:drawablePadding="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/signUpLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <EditText
+            android:id="@+id/signUpEmailField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableStart="@drawable/email_icon"
+            android:textSize="22sp"
+            android:hint="Укажите свой адрес эл. почты"
+            android:inputType="textEmailAddress" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_info_black_24dp"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:linksClickable="true"
+            android:text="Адрес эл. почты используется для входа в аккаунт, а так же для восстановления доступа в случае утери пароля"
+            android:textColorLink="?colorPrimary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/signUpPasswordField"
+                style="@style/EditTextTheme"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="Придумайте пароль"
+                android:drawableStart="@drawable/pass_icon"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:inputType="textPassword" />
+
+            <ImageButton
+                android:id="@+id/signUpShowPassword"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:src="@drawable/show_pass_icon"
+                android:tint="@color/text_color" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_info_black_24dp"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Пароль должен быть не менее 6 символов"
+            android:textColorLink="?colorPrimary"
+            android:textSize="12sp"/>
+
+        <EditText
+            android:id="@+id/sighUpPhoneField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableStart="@drawable/phone_icon"
+            android:textSize="22sp"
+            android:hint="Введите свой номер телефона"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:maxLength="13"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:linksClickable="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:drawableStart="@drawable/ic_info_black_24dp"
+            android:text="Формат +(XXX)-(XXX)-(XX)-(XX)\nМы использвуем номер телефона для отслеживания устройст без доступа в Интернет"
+            android:textColorLink="?colorPrimary"
+            android:textSize="12sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/continueRegistrationButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?backgroundColorDark"
+            android:text="Далее"
+            android:layout_marginTop="20dp"
+            android:textAllCaps="false"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/toLoginLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Войти"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="?colorPrimary"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
+    </LinearLayout>
+</LinearLayout>

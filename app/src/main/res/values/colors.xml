@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#FFF</color>
+    <color name="background_sdark">#DFDFDF</color>
+    <color name="text_color">#242A31</color>
+    <color name="text_color_secondary">#5F656D</color>
+    <color name="text_highlight">#B9C7E0</color>
+    <color name="text_white">#FFF</color>
+    <color name="accent_color">#2f90e5</color>
+    <color name="accent_color_dark">#2777BD</color>
+    <color name="accent_color_dark_2">#2164A0</color>
+
+</resources>

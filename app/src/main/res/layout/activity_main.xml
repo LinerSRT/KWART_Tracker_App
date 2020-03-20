@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.liner.familytracker.Views.SlidingPanelLayout android:id="@+id/pillar_panel"
+    android:saveEnabled="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:sp_minimumPanelHeight="200dp"
+    app:sp_parallax="0.5"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <fragment
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <!--- <com.life360.android.shared.p180ui.MapModeWidget
+            android:id="@+id/pillar_options"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="178dp"
+            android:layout_alignParentBottom="true"/>
+            -->
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/circleUsersRecycler"
+        android:background="#ffffff"
+        android:saveEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="signout"
+        android:id="@+id/safagasgasg"/>
+</com.liner.familytracker.Views.SlidingPanelLayout>

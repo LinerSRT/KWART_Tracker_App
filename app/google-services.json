@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "504925356298",
+    "firebase_url": "https://kwtracker-d8ee5.firebaseio.com",
+    "project_id": "kwtracker-d8ee5",
+    "storage_bucket": "kwtracker-d8ee5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504925356298:android:f3f500777f0ca0501d7af3",
+        "android_client_info": {
+          "package_name": "com.liner.familytracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504925356298-frbtssihs64k6ncgl67ts3o25f3a7og9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.liner.familytracker",
+            "certificate_hash": "d75907c83b3b153b5cbac121c9ecdb83875d34f9"
+          }
+        },
+        {
+          "client_id": "504925356298-028baknsmsl93m2muqchr3abb69a9g81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2Zj8_wEcdk8LnJvxJgKQuPeKtFOif8x4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504925356298-028baknsmsl93m2muqchr3abb69a9g81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

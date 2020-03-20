@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.liner.familytracker">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="false"
+        tools:replace="android:allowBackup"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Main.MainActivity"
+            android:theme="@style/AppTheme.Fullscreen"></activity>
+        <activity
+            android:name=".LoginRegister.EnterPhoneNumberActivity"
+            android:label="Укажите ваш номер телефона"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".LoginRegister.CreatePasswordActivity"
+            android:label="Создайте пароль"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".LoginRegister.EnterEmailActivity"
+            android:label="Обеспечьте безопасность своего аккаунта"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".LoginRegister.CreateProfileActivity"
+            android:label="Ваш профиль"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".LoginRegister.CircleConfigActivity"
+            android:label="Ваш круг"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".LoginRegister.InviteCodeActivity"
+            android:label="Код приглашения"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="InnerclassSeparator" />
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCS-1gS41Ult0XKAwtUzYON3CdqoycEDg8" />
+    </application>
+
+</manifest>
