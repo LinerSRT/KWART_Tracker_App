@@ -31,8 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.liner.familytracker.DatabaseModels.UserModel;
-import com.liner.familytracker.LoginRegister.CreateProfileActivity;
+import com.liner.familytracker.Register.CreateProfileActivity;
 import com.liner.familytracker.Main.MainActivity;
+import com.liner.familytracker.Utils.ColorUtils;
 
 import java.util.regex.Pattern;
 
@@ -256,6 +257,7 @@ public class SplashActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     //todo login success
                                     startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    finish();
                                 } else {
                                     //todo wrong email or password
                                     runOnUiThread(new Runnable() {
@@ -392,6 +394,7 @@ public class SplashActivity extends AppCompatActivity {
                                                             currentUserDatabase.child("inviteCode").setValue(UserModel.generateInviteCode());
                                                             registerDialog.dismiss();
                                                             startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                                            finish();
                                                         } else {
                                                             //todo login failed
                                                             registerDialog.dismiss();
@@ -453,6 +456,7 @@ public class SplashActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if(task.isSuccessful()) {
                                             startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                            finish();
                                         } else {
                                             checkAccountDialog.dismiss();
                                             Handler handler = new Handler();
@@ -470,9 +474,11 @@ public class SplashActivity extends AppCompatActivity {
                                 });
                             } else {
                                 startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                finish();
                             }
                         } else {
                             startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
                         }
                         return;
                     } else {
@@ -537,4 +543,5 @@ public class SplashActivity extends AppCompatActivity {
         void onValid();
         void onNotValid();
     }
+
 }

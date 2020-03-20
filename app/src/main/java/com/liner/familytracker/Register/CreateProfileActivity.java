@@ -1,4 +1,4 @@
-package com.liner.familytracker.LoginRegister;
+package com.liner.familytracker.Register;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,9 +27,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.liner.familytracker.ColorUtils;
+import com.liner.familytracker.Utils.ColorUtils;
 import com.liner.familytracker.CoreUtils.CoreActivity;
-import com.liner.familytracker.DatabaseModels.CircleModel;
 import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.R;
 import com.squareup.picasso.Picasso;
@@ -144,11 +143,6 @@ public class CreateProfileActivity extends CoreActivity {
                  }
             }
         });
-    }
-
-    @Override
-    public void onCircleDataChanged(CircleModel circleModel) {
-
     }
 
     @Override

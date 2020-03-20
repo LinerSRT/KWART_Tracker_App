@@ -15,7 +15,7 @@ public class UserModel {
     private String photoUrl;
     private String deviceToken;
     private String registerFinished;
-    private List<UserJoinedCircles> joinedCircles;
+    private List<String> synchronizedUsers;
 
 
     public UserModel() {
@@ -109,12 +109,16 @@ public class UserModel {
         this.deviceToken = deviceToken;
     }
 
-    public List<UserJoinedCircles> getJoinedCircles() {
-        return joinedCircles;
+    public String getRegisterFinished() {
+        return registerFinished;
     }
 
-    public void setJoinedCircles(List<UserJoinedCircles> joinedCircles) {
-        this.joinedCircles = joinedCircles;
+    public List<String> getSynchronizedUsers() {
+        return synchronizedUsers;
+    }
+
+    public void setSynchronizedUsers(List<String> synchronizedUsers) {
+        this.synchronizedUsers = synchronizedUsers;
     }
 
     public static String generateInviteCode(){

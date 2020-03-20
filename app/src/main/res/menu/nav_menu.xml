@@ -3,16 +3,11 @@
 
     <item
         android:id="@+id/item0"
-        android:title="Профиль"
-        android:icon="@drawable/account_round"/>
+        android:title="Карта"
+        android:icon="@drawable/map_bg"/>
 
     <item
         android:id="@+id/item1"
-        android:title="Устройства"
-        android:icon="@drawable/devices_social"/>
-
-    <item
-        android:id="@+id/item2"
         android:title="Настройки"
         android:icon="@drawable/settings_icon"/>
 

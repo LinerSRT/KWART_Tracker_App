@@ -11,7 +11,7 @@
     <application
         android:allowBackup="false"
         tools:replace="android:allowBackup"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/account_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -20,19 +20,19 @@
             android:name=".Main.MainActivity"
             android:theme="@style/AppTheme.Fullscreen" />
         <activity
-            android:name=".LoginRegister.CreateProfileActivity"
+            android:name=".Register.CreateProfileActivity"
             android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".LoginRegister.CircleConfigActivity"
+            android:name=".Register.CircleConfigActivity"
             android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator" />
         <activity
-            android:name=".LoginRegister.InviteCodeActivity"
+            android:name=".Main.InviteCodeActivity"
             android:theme="@style/AppTheme.Fullscreen"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"

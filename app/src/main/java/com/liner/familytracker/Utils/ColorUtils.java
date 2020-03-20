@@ -1,4 +1,4 @@
-package com.liner.familytracker;
+package com.liner.familytracker.Utils;
 
 import android.content.Context;
 import android.content.res.Resources;

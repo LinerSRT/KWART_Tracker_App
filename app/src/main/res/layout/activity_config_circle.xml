@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LoginRegister.CreatePasswordActivity">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/registerProgress"
@@ -32,10 +31,9 @@
             android:layout_marginEnd="20dp"
             android:textSize="18sp"
             android:textColor="?textColor"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="Собираетесь вступить в круг? Отсканируйте QR-код приглашение"/>
+            android:text="Вы можете синхронизировать желаемые устройства, просто отсканируйте QR-код приглашение"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -65,23 +63,12 @@
             android:background="?backgroundColorDark"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textSize="18sp"
-            android:textColor="?textColor"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="Нет QR-кода?"/>
 
         <Button
             android:id="@+id/createCircle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Создайте новый круг"
+            android:text="Пропустить"
             android:background="?colorPrimary"
             android:textColor="#fff"
             android:layout_marginStart="20dp"
@@ -89,10 +76,9 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp"
             android:textAllCaps="false"
-            android:textSize="22sp"/>
+            android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -101,7 +87,7 @@
             android:drawableTint="?textColor"
             android:gravity="center"
             android:linksClickable="true"
-            android:text="Мы предоставим вам QR-код приглашение"
+            android:text="Вы можете синхронизировать устройства позже"
             android:textColorLink="?colorPrimary"
             android:textSize="12sp" />
 

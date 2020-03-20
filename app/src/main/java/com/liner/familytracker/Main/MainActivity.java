@@ -1,64 +1,66 @@
 package com.liner.familytracker.Main;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.firebase.database.DatabaseReference;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.gms.maps.MapFragment;
 import com.liner.familytracker.CoreUtils.CoreActivity;
-import com.liner.familytracker.DatabaseModels.CircleModel;
 import com.liner.familytracker.DatabaseModels.UserModel;
+import com.liner.familytracker.Main.Fragments.MapViewFragment;
+import com.liner.familytracker.Main.Fragments.SettingsFragmnet;
 import com.liner.familytracker.R;
+import com.liner.familytracker.Utils.FragmentAdapter;
 
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.shape.ShapeType;
-import co.mobiwise.materialintro.view.MaterialIntroView;
+import java.util.ArrayList;
+
+import me.ibrahimsn.lib.OnItemSelectedListener;
+import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class MainActivity extends CoreActivity {
-    private RecyclerView circleUsersRecycler;
+    private ViewPager mainPager;
+    private SmoothBottomBar appBar;
+    private FragmentAdapter fragmentAdapter;
+
+    private MapFragment map;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        circleUsersRecycler = findViewById(R.id.circleUsersRecycler);
+        mainPager = findViewById(R.id.mainViewPager);
+        appBar = findViewById(R.id.mainAppBar);
+        ArrayList<Class<? extends Fragment>> pages = new ArrayList<>();
+        pages.add(MapViewFragment.class);
+        pages.add(SettingsFragmnet.class);
+        fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(),this, pages);
+        mainPager.setAdapter(fragmentAdapter);
+        mainPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+                appBar.setActiveItem(position);
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-
-        //Button bv = findViewById(R.id.safagasgasg);
-        //new MaterialIntroView.Builder(this)
-        //        .enableDotAnimation(true)
-        //        .enableIcon(false)
-        //        .setFocusGravity(FocusGravity.CENTER)
-        //        .setFocusType(Focus.MINIMUM)
-        //        .setDelayMillis(500)
-        //        .enableFadeAnimation(true)
-        //        .performClick(true)
-        //        .setInfoText("Hi There! Click this card and see what happens.")
-        //        .setTarget(bv)
-        //        .setUsageId("intro_card") //THIS SHOULD BE UNIQUE ID
-        //        .show();
-////
-        //bv.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        firebaseAuth.signOut();
-        //    }
-        //});
-    }
-
-    @Override
-    public void onCircleDataChanged(CircleModel circleModel) {
+            }
+        });
+        appBar.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelect(int i) {
+                mainPager.setCurrentItem(i, true);
+            }
+        });
+        //map = ((MapViewFragment) getFragmentManager().findFragmentById(R.id.mapView));
 
     }
 

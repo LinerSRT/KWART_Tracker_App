@@ -17,8 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.liner.familytracker.DatabaseModels.CircleModel;
-import com.liner.familytracker.DatabaseModels.UserJoinedCircles;
 import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.SplashActivity;
 
@@ -31,12 +29,9 @@ public abstract class CoreActivity extends AppCompatActivity {
     public FirebaseAuth.AuthStateListener authStateListener;
     public FirebaseDatabase firebaseDatabase;
     public StorageReference storageReference;
-    public DatabaseReference usersDatabase, circlesDatabase, currentUserDatabase;
+    public DatabaseReference usersDatabase, currentUserDatabase;
     public UserModel userModel;
-    public List<UserJoinedCircles> userJoinedCircles;
-    public List<CircleModel> userCircles;
-    public List<UserModel> circleUsers;
-
+    public List<UserModel> synchronizedUsers;
     public FirebaseUser firebaseUser;
 
     @Override
@@ -50,12 +45,8 @@ public abstract class CoreActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         usersDatabase = firebaseDatabase.getReference().child("Users");
         currentUserDatabase = firebaseDatabase.getReference().child("Users").child(firebaseUser.getUid());
-        circlesDatabase = firebaseDatabase.getReference().child("Circles");
         usersDatabase.keepSynced(true);
-        circlesDatabase.keepSynced(true);
-        userJoinedCircles = new ArrayList<>();
-        userCircles = new ArrayList<>();
-        circleUsers = new ArrayList<>();
+        synchronizedUsers = new ArrayList<>();
         currentUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -96,8 +87,8 @@ public abstract class CoreActivity extends AppCompatActivity {
                     if (dataSnapshot.hasChild("registerFinished")) {
                         userModel.setRegisterFinished(dataSnapshot.child("registerFinished").getValue().toString());
                     }
-                    if (dataSnapshot.hasChild("joinedCircles")) {
-                        for (DataSnapshot circle: dataSnapshot.child("joinedCircles").getChildren()) {
+                    if (dataSnapshot.hasChild("synchronizedUsers")) {
+                        for (DataSnapshot circle: dataSnapshot.child("synchronizedUsers").getChildren()) {
                             Log.e("TAGTAG", "Joined: "+circle.getValue().toString());
                             //userJoinedCircles.add(circle.getValue(UserJoinedCircles.class));
                         }
@@ -130,8 +121,6 @@ public abstract class CoreActivity extends AppCompatActivity {
         firebaseAuth.addAuthStateListener(authStateListener);
         super.onCreate(savedInstanceState);
     }
-
-    public abstract void onCircleDataChanged(CircleModel circleModel);
     public abstract void onUserDataChanged(UserModel userModel);
     public abstract void onUserLoggedOut();
     public abstract void onUserSignedIn();

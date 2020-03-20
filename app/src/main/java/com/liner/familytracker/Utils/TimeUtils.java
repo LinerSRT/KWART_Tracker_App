@@ -1,16 +1,8 @@
-package com.liner.familytracker.utils;
+package com.liner.familytracker.Utils;
 
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.widget.ImageView;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
 
 public class TimeUtils {
     private static final int SECOND_MILLIS = 1000;
