@@ -1,5 +1,6 @@
 package com.liner.familytracker.DatabaseModels;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -119,6 +120,24 @@ public class UserModel {
 
     public void setSynchronizedUsers(List<String> synchronizedUsers) {
         this.synchronizedUsers = synchronizedUsers;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "UID='" + UID + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", longtitude='" + longtitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", inviteCode='" + inviteCode + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", deviceToken='" + deviceToken + '\'' +
+                ", registerFinished='" + registerFinished + '\'' +
+                ", synchronizedUsers=" + Arrays.toString(synchronizedUsers.toArray()) +
+                '}';
     }
 
     public static String generateInviteCode(){

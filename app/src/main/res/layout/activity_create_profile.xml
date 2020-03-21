@@ -36,7 +36,7 @@
                 android:id="@+id/profilePhotoView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/account_round" />
+                android:src="@drawable/user_profile_temp" />
 
             <ImageView
                 android:id="@+id/addPhotoView"
@@ -71,7 +71,7 @@
             android:gravity="center"
             android:hint="Укажите свое имя"
             android:inputType="textEmailAddress"
-            android:textSize="22sp"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="20dp" />
 
         <TextView
@@ -97,7 +97,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="wrap_content"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/map_bg" />
 
@@ -125,7 +125,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:padding="3dp"
-                    android:src="@drawable/account_round" />
+                    android:src="@drawable/user_profile_temp" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -134,16 +134,18 @@
 
     <Button
         android:id="@+id/nextStep"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="?backgroundColorDark"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="Далее"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="18sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>

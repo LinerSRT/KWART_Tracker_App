@@ -12,7 +12,7 @@
         android:gravity="center"
         android:text="Отсканируйте этот пригласительный код, что бы присоединить людей к своему кругу"
         android:textColor="?textColor"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/qrInviteCode" />
@@ -29,13 +29,18 @@
 
     <Button
         android:id="@+id/actionButton"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="?colorPrimary"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="Готово"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qrInviteCode" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>

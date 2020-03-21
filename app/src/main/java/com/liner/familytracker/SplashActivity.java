@@ -31,9 +31,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.liner.familytracker.DatabaseModels.UserModel;
+import com.liner.familytracker.Main.TrackerActivity;
 import com.liner.familytracker.Register.CreateProfileActivity;
-import com.liner.familytracker.Main.MainActivity;
 import com.liner.familytracker.Utils.ColorUtils;
+import com.liner.familytracker.Utils.Helper;
+import com.liner.familytracker.Utils.HelperListener;
 
 import java.util.regex.Pattern;
 
@@ -256,7 +258,7 @@ public class SplashActivity extends AppCompatActivity {
                                 signInDialog.dismiss();
                                 if (task.isSuccessful()) {
                                     //todo login success
-                                    startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    startActivity(new Intent(SplashActivity.this, TrackerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                     finish();
                                 } else {
                                     //todo wrong email or password
@@ -436,7 +438,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void checkCurrentUser(){
         final MaterialDialog checkAccountDialog = new MaterialDialog.Builder(SplashActivity.this)
-                .content("Подождите...")
+                .content("Подключение к серверам...")
                 .cancelable(false)
                 .progressIndeterminateStyle(true)
                 .widgetColor(getResources().getColor(R.color.accent_color))
@@ -446,40 +448,47 @@ public class SplashActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                for (final DataSnapshot child: dataSnapshot.getChildren()) {
                     String value = (String) child.child("UID").getValue();
                     if(value.equals(firebaseAuth.getCurrentUser().getUid()) && !value.equals("")){
-                        if(child.hasChild("registerFinished")){
-                            if(!child.child("registerFinished").getValue().toString().equals("true")){
-                                firebaseAuth.signInWithEmailAndPassword(child.child("userEmail").getValue().toString(), child.child("userPassword").getValue().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if(task.isSuccessful()) {
-                                            startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                            finish();
-                                        } else {
-                                            checkAccountDialog.dismiss();
-                                            Handler handler = new Handler();
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    signInLayout.setAlpha(0);
-                                                    signInLayout.setVisibility(View.VISIBLE);
-                                                    signInLayout.animate().alpha(1f).setDuration(500);
-                                                }
-                                            }, 700);
-                                            firebaseAuth.signOut();
+                        Helper.getUserModel(value, new HelperListener() {
+                            @Override
+                            public void onFinish(UserModel userModel) {
+                                if(!userModel.isRegisterFinished().equals("true")){
+                                    firebaseAuth.signInWithEmailAndPassword(child.child("userEmail").getValue().toString(), child.child("userPassword").getValue().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if(task.isSuccessful()) {
+                                                checkAccountDialog.dismiss();
+                                                startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                                finish();
+                                            } else {
+                                                checkAccountDialog.dismiss();
+                                                Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        signInLayout.setAlpha(0);
+                                                        signInLayout.setVisibility(View.VISIBLE);
+                                                        signInLayout.animate().alpha(1f).setDuration(500);
+                                                    }
+                                                }, 700);
+                                                firebaseAuth.signOut();
+                                            }
                                         }
-                                    }
-                                });
-                            } else {
-                                startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                finish();
+                                    });
+                                } else {
+                                    checkAccountDialog.dismiss();
+                                    startActivity(new Intent(SplashActivity.this, TrackerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    finish();
+                                }
                             }
-                        } else {
-                            startActivity(new Intent(SplashActivity.this, CreateProfileActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                            finish();
-                        }
+
+                            @Override
+                            public void onFinish(DatabaseReference databaseReference) {
+
+                            }
+                        });
                         return;
                     } else {
                         checkAccountDialog.dismiss();

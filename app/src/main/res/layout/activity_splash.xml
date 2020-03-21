@@ -30,8 +30,8 @@
 
         <ImageView
             android:id="@+id/logoView"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
             android:src="@drawable/app_drawable" />
 
         <TextView
@@ -41,7 +41,7 @@
             android:gravity="center"
             android:text="Family Locator"
             android:textColor="?textColor"
-            android:textSize="32sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:gravity="center"
             android:text="Можно посмотреть, где находятся ваши друзья и близкие, в любое время и в любом месте"
             android:textColor="?textColor"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:drawableStart="@drawable/email_icon"
-            android:textSize="22sp"
+            android:textSize="16sp"
             android:layout_marginBottom="20dp"
             android:hint="Укажите свой адрес эл. почты"
             android:inputType="textEmailAddress"
@@ -100,13 +100,13 @@
                 android:hint="Пароль"
                 android:drawableStart="@drawable/pass_icon"
                 android:gravity="center"
-                android:textSize="22sp"
+                android:textSize="16sp"
                 android:inputType="textPassword" />
 
             <ImageButton
                 android:id="@+id/signShowPassword"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:background="@null"
                 android:src="@drawable/show_pass_icon"
                 android:tint="@color/text_color" />
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:text="Забыли пароль?"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:padding="10dp"
             android:textStyle="bold"/>
 
@@ -144,7 +144,7 @@
             android:text="Войти"
             android:textAllCaps="false"
             android:textColor="#fff"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
@@ -153,7 +153,7 @@
             android:layout_height="wrap_content"
             android:text="Регистрация"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="?colorPrimary"
             android:textStyle="bold"
             android:paddingStart="20dp"
@@ -182,7 +182,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:drawableStart="@drawable/email_icon"
-            android:textSize="22sp"
+            android:textSize="16sp"
             android:hint="Укажите свой адрес эл. почты"
             android:inputType="textEmailAddress" />
         <TextView
@@ -211,7 +211,7 @@
                 android:hint="Придумайте пароль"
                 android:drawableStart="@drawable/pass_icon"
                 android:gravity="center"
-                android:textSize="22sp"
+                android:textSize="16sp"
                 android:inputType="textPassword" />
 
             <ImageButton
@@ -242,7 +242,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:drawableStart="@drawable/phone_icon"
-            android:textSize="22sp"
+            android:textSize="16sp"
             android:hint="Введите свой номер телефона"
             android:inputType="phone"
             android:singleLine="true"
@@ -269,7 +269,7 @@
             android:layout_marginTop="20dp"
             android:textAllCaps="false"
             android:textColor="#fff"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
@@ -278,7 +278,7 @@
             android:layout_height="50dp"
             android:text="Войти"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:textColor="?colorPrimary"

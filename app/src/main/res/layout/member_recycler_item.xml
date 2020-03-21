@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_margin="5dp"
+    android:background="@drawable/background_round_corners"
+    android:elevation="3dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/memberPhoto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/user_profile_temp"/>
+
+
+    <TextView
+        android:id="@+id/memberName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:text="User name"/>
+
+
+    <TextView
+        android:id="@+id/memberLocationAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        android:text="Рядом с ул. Мира 2"/>
+
+    <TextView
+        android:id="@+id/memberBatteryLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_battery_full_black_24dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        android:text="96%"/>
+
+
+
+</LinearLayout>

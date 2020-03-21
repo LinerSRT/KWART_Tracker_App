@@ -17,20 +17,20 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.liner.familytracker.Application;
 import com.liner.familytracker.Utils.ColorUtils;
-import com.liner.familytracker.CoreUtils.CoreActivity;
 import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.R;
+import com.liner.familytracker.Utils.Helper;
+import com.liner.familytracker.Utils.HelperActivity;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -42,7 +42,7 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
-public class CreateProfileActivity extends CoreActivity {
+public class CreateProfileActivity extends HelperActivity {
     private EditText nameField;
     private Button nextStep;
     private ImageView addPhotoView;
@@ -56,19 +56,6 @@ public class CreateProfileActivity extends CoreActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
-        currentUserDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (firebaseUser != null && !firebaseUser.isAnonymous()) {
-                    userModel = dataSnapshot.getValue(UserModel.class);
-                    onUserDataChanged(userModel);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         nameField = findViewById(R.id.nameEditText);
         nextStep = findViewById(R.id.nextStep);
         profilePhoto = findViewById(R.id.profilePhotoView);
@@ -121,8 +108,8 @@ public class CreateProfileActivity extends CoreActivity {
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                        currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim());
-                                        currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Helper.getUserDatabase(firebaseUser.getUid()).child("userName").setValue(nameField.getText().toString().trim());
+                                        Helper.getUserDatabase(firebaseUser.getUid()).child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -132,8 +119,8 @@ public class CreateProfileActivity extends CoreActivity {
                                 })
                                 .show();
                     } else {
-                        currentUserDatabase.child("userName").setValue(nameField.getText().toString().trim());
-                        currentUserDatabase.child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Helper.getUserDatabase(firebaseUser.getUid()).child("userName").setValue(nameField.getText().toString().trim());
+                        Helper.getUserDatabase(firebaseUser.getUid()).child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -146,17 +133,7 @@ public class CreateProfileActivity extends CoreActivity {
     }
 
     @Override
-    public void onUserDataChanged(UserModel userModel) {
-
-    }
-
-    @Override
-    public void onUserLoggedOut() {
-
-    }
-
-    @Override
-    public void onUserSignedIn() {
+    public void onFirebaseChanged() {
 
     }
 
@@ -226,7 +203,7 @@ public class CreateProfileActivity extends CoreActivity {
                         storageReference.child("user_photos").child(firebaseUser.getUid() + ".jpg").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
                             public void onComplete(@NonNull final Task<Uri> task) {
-                                currentUserDatabase.child("photoUrl").setValue(task.getResult().toString());
+                                Helper.getUserDatabase(firebaseUser.getUid()).child("photoUrl").setValue(task.getResult().toString());
                                 photoUploaded = true;
                                 uploadPhotoProgressDialog.dismiss();
                             }
