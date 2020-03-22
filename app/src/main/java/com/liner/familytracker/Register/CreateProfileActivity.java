@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.liner.familytracker.Application;
+import com.liner.familytracker.Main.TrackerActivity;
 import com.liner.familytracker.Utils.ColorUtils;
 import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.R;
@@ -109,10 +110,10 @@ public class CreateProfileActivity extends HelperActivity {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         Helper.getUserDatabase(firebaseUser.getUid()).child("userName").setValue(nameField.getText().toString().trim());
-                                        Helper.getUserDatabase(firebaseUser.getUid()).child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Helper.getUserDatabase(firebaseUser.getUid()).child("finishedReg").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                                startActivity(new Intent(CreateProfileActivity.this, TrackerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                             }
                                         });
                                     }
@@ -120,10 +121,10 @@ public class CreateProfileActivity extends HelperActivity {
                                 .show();
                     } else {
                         Helper.getUserDatabase(firebaseUser.getUid()).child("userName").setValue(nameField.getText().toString().trim());
-                        Helper.getUserDatabase(firebaseUser.getUid()).child("registerFinished").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Helper.getUserDatabase(firebaseUser.getUid()).child("finishedReg").setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                startActivity(new Intent(CreateProfileActivity.this, CircleConfigActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                startActivity(new Intent(CreateProfileActivity.this, TrackerActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
                         });
                     }

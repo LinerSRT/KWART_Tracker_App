@@ -1,11 +1,10 @@
 package com.liner.familytracker.DatabaseModels;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class UserModel {
-    private String UID;
+    private String uid;
     private String phoneNumber;
     private String userName;
     private String userPassword;
@@ -15,27 +14,21 @@ public class UserModel {
     private String inviteCode;
     private String photoUrl;
     private String deviceToken;
-    private String registerFinished;
+    private DeviceStatus deviceStatus;
+    private String finishedReg;
     private List<String> synchronizedUsers;
+
 
 
     public UserModel() {
     }
 
-    public String isRegisterFinished() {
-        return registerFinished;
+    public String getUid() {
+        return uid;
     }
 
-    public void setRegisterFinished(String registerFinished) {
-        this.registerFinished = registerFinished;
-    }
-
-    public String getUID() {
-        return UID;
-    }
-
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getPhoneNumber() {
@@ -110,8 +103,12 @@ public class UserModel {
         this.deviceToken = deviceToken;
     }
 
-    public String getRegisterFinished() {
-        return registerFinished;
+    public String getFinishedReg() {
+        return finishedReg;
+    }
+
+    public void setFinishedReg(String finishedReg) {
+        this.finishedReg = finishedReg;
     }
 
     public List<String> getSynchronizedUsers() {
@@ -122,22 +119,12 @@ public class UserModel {
         this.synchronizedUsers = synchronizedUsers;
     }
 
-    @Override
-    public String toString() {
-        return "UserModel{" +
-                "UID='" + UID + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", longtitude='" + longtitude + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", inviteCode='" + inviteCode + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-                ", deviceToken='" + deviceToken + '\'' +
-                ", registerFinished='" + registerFinished + '\'' +
-                ", synchronizedUsers=" + Arrays.toString(synchronizedUsers.toArray()) +
-                '}';
+    public DeviceStatus getDeviceStatus() {
+        return deviceStatus;
+    }
+
+    public void setDeviceStatus(DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus;
     }
 
     public static String generateInviteCode(){

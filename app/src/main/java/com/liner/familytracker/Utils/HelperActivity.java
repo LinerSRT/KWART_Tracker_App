@@ -35,6 +35,7 @@ public abstract class HelperActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         usersDatabase = firebaseDatabase.getReference().child("Users");
+        Helper.getUserDatabase().child("uid").setValue(firebaseUser.getUid());
         DatabaseReference currentUserDatabase = Helper.getUserDatabase(firebaseUser.getUid());
         currentUserDatabase.keepSynced(true);
         currentUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -64,11 +65,11 @@ public abstract class HelperActivity extends AppCompatActivity {
                 Helper.getUserModel(firebaseUser.getUid(), new HelperListener() {
                     @Override
                     public void onFinish(UserModel userModel) {
-                        if(userModel.getUID().equals(dataSnapshot.child("UID").getValue().toString())){
+                        if(userModel.getUid().equals(dataSnapshot.child("uid").getValue().toString())){
                             application.onFirebaseChanged();
                         } else {
                             for(String member:userModel.getSynchronizedUsers()){
-                                if(member.equals(dataSnapshot.child("UID").getValue().toString())){
+                                if(member.equals(dataSnapshot.child("uid").getValue().toString())){
                                     application.onFirebaseChanged();
                                 }
                             }

@@ -10,7 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
+import com.liner.familytracker.DatabaseModels.DeviceStatus;
 import com.liner.familytracker.DatabaseModels.UserModel;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class Helper {
         currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("UID")) {
-                    userModel.setUID(dataSnapshot.child("UID").getValue().toString());
+                if (dataSnapshot.hasChild("uid")) {
+                    userModel.setUid(dataSnapshot.child("uid").getValue().toString());
                 }
                 if (dataSnapshot.hasChild("phoneNumber")) {
                     userModel.setPhoneNumber(dataSnapshot.child("phoneNumber").getValue().toString());
@@ -54,8 +54,8 @@ public class Helper {
                 if (dataSnapshot.hasChild("deviceToken")) {
                     userModel.setDeviceToken(dataSnapshot.child("deviceToken").getValue().toString());
                 }
-                if (dataSnapshot.hasChild("registerFinished")) {
-                    userModel.setRegisterFinished(dataSnapshot.child("registerFinished").getValue().toString());
+                if (dataSnapshot.hasChild("finishedReg")) {
+                    userModel.setFinishedReg(dataSnapshot.child("finishedReg").getValue().toString());
                 }
                 List<String> usersSynced = new ArrayList<>();
                 if (dataSnapshot.hasChild("synchronizedUsers")) {
@@ -64,6 +64,67 @@ public class Helper {
                     }
                 }
                 userModel.setSynchronizedUsers(usersSynced);
+                helperListener.onFinish(userModel);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public static void getUserModel(final HelperListener helperListener){
+        final UserModel userModel = new UserModel();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference currentUserReference = firebaseDatabase.getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        currentUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("uid")) {
+                    userModel.setUid(dataSnapshot.child("uid").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("phoneNumber")) {
+                    userModel.setPhoneNumber(dataSnapshot.child("phoneNumber").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("userName")) {
+                    userModel.setUserName(dataSnapshot.child("userName").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("userPassword")) {
+                    userModel.setUserPassword(dataSnapshot.child("userPassword").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("userEmail")) {
+                    userModel.setUserEmail(dataSnapshot.child("userEmail").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("longtitude")) {
+                    userModel.setLongtitude(dataSnapshot.child("longtitude").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("latitude")) {
+                    userModel.setLatitude(dataSnapshot.child("latitude").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("inviteCode")) {
+                    userModel.setInviteCode(dataSnapshot.child("inviteCode").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("photoUrl")) {
+                    userModel.setPhotoUrl(dataSnapshot.child("photoUrl").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("deviceToken")) {
+                    userModel.setDeviceToken(dataSnapshot.child("deviceToken").getValue().toString());
+                }
+                if (dataSnapshot.hasChild("finishedReg")) {
+                    userModel.setFinishedReg(dataSnapshot.child("finishedReg").getValue().toString());
+                }
+                List<String> usersSynced = new ArrayList<>();
+                if (dataSnapshot.hasChild("synchronizedUsers")) {
+                    for (DataSnapshot item : dataSnapshot.child("synchronizedUsers").getChildren()) {
+                        usersSynced.add(item.getValue().toString());
+                    }
+                }
+                userModel.setSynchronizedUsers(usersSynced);
+                DeviceStatus deviceStatus = new DeviceStatus();
+                if(dataSnapshot.hasChild("deviceStatus")){
+                    deviceStatus = dataSnapshot.child("deviceStatus").getValue(DeviceStatus.class);
+                }
+                userModel.setDeviceStatus(deviceStatus);
                 helperListener.onFinish(userModel);
             }
 
@@ -105,6 +166,10 @@ public class Helper {
     public static DatabaseReference getUserDatabase(String useruid){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         return firebaseDatabase.getReference().child("Users").child(useruid);
+    }
+    public static DatabaseReference getUserDatabase(){
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        return firebaseDatabase.getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
 }

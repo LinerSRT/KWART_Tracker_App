@@ -60,7 +60,7 @@ public class AddNewMemberActivity extends HelperActivity {
                             if(child.child("inviteCode").getValue().equals(searchedValue) && !child.child("inviteCode").getValue().equals("")){
                                 //todo нашли у пользователя искомый код
 
-                                final String foundedUserUID = child.child("UID").getValue().toString().trim();
+                                final String foundedUserUID = child.child("uid").getValue().toString().trim();
                                 Helper.getUserModel(foundedUserUID, new HelperListener() {
                                     @Override
                                     public void onFinish(UserModel userModel) {
