@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:animateLayoutChanges="true"
     android:background="@color/background"
     tools:context=".Main.TrackerActivity">
 
@@ -55,21 +56,10 @@
         </LinearLayout>
     </RelativeLayout>
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/memberRecycler"
-        android:background="@color/background"
-        tools:orientation="horizontal"
-        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/member_recycler_item"
-        tools:itemCount="5"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        tools:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
-
-
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

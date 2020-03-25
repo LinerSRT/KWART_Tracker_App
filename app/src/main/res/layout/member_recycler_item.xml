@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="5dp"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
     android:background="@drawable/background_round_corners"
     android:elevation="3dp"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
 
@@ -16,34 +16,112 @@
         android:src="@drawable/user_profile_temp"/>
 
 
-    <TextView
-        android:id="@+id/memberName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@color/text_color"
-        android:text="User name"/>
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/memberName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"/>
 
 
-    <TextView
-        android:id="@+id/memberLocationAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="12sp"
-        android:textColor="@color/text_color"
-        android:text="Рядом с ул. Мира 2"/>
+        <TextView
+            android:id="@+id/memberLocationAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Данные о местоположении отсутствуют"
+            android:textColor="@color/text_color"/>
 
-    <TextView
-        android:id="@+id/memberBatteryLevel"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/memberBatteryLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_battery_full_black_24dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/text_color"
+                android:layout_marginEnd="5dp"/>
+
+
+            <TextView
+                android:id="@+id/networkStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/signal_icon"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/text_color"
+                android:layout_marginEnd="5dp"
+                android:text="WiFi"/>
+
+
+            <TextView
+                android:id="@+id/lastLocationUpdateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_history_black_24dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textColor="@color/text_color"
+                android:layout_marginEnd="5dp"
+                android:text="22:22"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_battery_full_black_24dp"
-        android:gravity="center"
-        android:textSize="12sp"
-        android:textColor="@color/text_color"
-        android:text="96%"/>
+        android:orientation="horizontal">
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_message_black_24dp"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="?colorPrimary"
+            android:layout_marginEnd="5dp"
+            android:tint="#fff"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_call_black_24dp"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="?colorPrimary"
+            android:layout_marginEnd="5dp"
+            android:tint="#fff"/>
+        <ImageButton
+            android:id="@+id/moveMap"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_location_searching_black_24dp"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="?colorPrimary"
+            android:layout_marginEnd="5dp"
+            android:tint="#fff"/>
+
+    </LinearLayout>
+
+
+
 
 
 

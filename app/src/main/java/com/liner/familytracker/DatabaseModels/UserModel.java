@@ -137,4 +137,23 @@ public class UserModel {
         }
         return sb.toString();
     }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "uid='" + uid + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", longtitude='" + longtitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", inviteCode='" + inviteCode + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", deviceToken='" + deviceToken + '\'' +
+                ", deviceStatus=" + deviceStatus +
+                ", finishedReg='" + finishedReg + '\'' +
+                ", synchronizedUsers=" + synchronizedUsers +
+                '}';
+    }
 }

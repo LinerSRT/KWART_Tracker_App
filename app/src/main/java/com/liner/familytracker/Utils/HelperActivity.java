@@ -17,75 +17,99 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.liner.familytracker.Application;
+import com.liner.familytracker.DatabaseModels.DeviceStatus;
 import com.liner.familytracker.DatabaseModels.UserModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class HelperActivity extends AppCompatActivity {
     protected Application application;
+    public PreferenceManager preferenceManager;
     public FirebaseAuth firebaseAuth;
     public FirebaseDatabase firebaseDatabase;
     public StorageReference storageReference;
     public DatabaseReference usersDatabase;
     public FirebaseUser firebaseUser;
+    public PrefHelper prefHelper;
+    public UserModel currentUser;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         application = (Application) getApplication();
         application.onActivityCreated(this, savedInstanceState);
+        preferenceManager = PreferenceManager.getInstance(this);
+        prefHelper = new PrefHelper(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        preferenceManager.saveString("user_uid", firebaseUser.getUid());
         firebaseDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         usersDatabase = firebaseDatabase.getReference().child("Users");
+        if(prefHelper.isUserExist(firebaseUser.getUid())){
+            currentUser = prefHelper.getUser(preferenceManager.getString("user_uid", "null"));
+        } else {
+            Helper.getUserModel(new HelperListener() {
+                @Override
+                public void onFinish(UserModel userModel) {
+                    currentUser = userModel;
+                    prefHelper.saveUser(currentUser);
+                }
+
+                @Override
+                public void onFinish(DatabaseReference databaseReference) {
+
+                }
+            });
+        }
         Helper.getUserDatabase().child("uid").setValue(firebaseUser.getUid());
-        DatabaseReference currentUserDatabase = Helper.getUserDatabase(firebaseUser.getUid());
-        currentUserDatabase.keepSynced(true);
-        currentUserDatabase.addValueEventListener(new ValueEventListener() {
+        usersDatabase.keepSynced(true);
+        usersDatabase.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(application != null){
-                    if(firebaseAuth.getCurrentUser() != null && !firebaseAuth.getCurrentUser().isAnonymous()){
-                        application.onFirebaseChanged();
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
+                    currentUser = getModel(dataSnapshot);
+                    prefHelper.saveUser(currentUser);
+                    onFirebaseChanged();
+                } else {
+                    for(String item:currentUser.getSynchronizedUsers()){
+                        if(dataSnapshot.getKey().equals(item)){
+                            prefHelper.saveUser(getModel(dataSnapshot));
+                            onFirebaseChanged();
+                        }
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        usersDatabase.keepSynced(true);
-        usersDatabase.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
             public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
-                Helper.getUserModel(firebaseUser.getUid(), new HelperListener() {
-                    @Override
-                    public void onFinish(UserModel userModel) {
-                        if(userModel.getUid().equals(dataSnapshot.child("uid").getValue().toString())){
-                            application.onFirebaseChanged();
-                        } else {
-                            for(String member:userModel.getSynchronizedUsers()){
-                                if(member.equals(dataSnapshot.child("uid").getValue().toString())){
-                                    application.onFirebaseChanged();
-                                }
-                            }
+                if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
+                    currentUser = getModel(dataSnapshot);
+                    prefHelper.saveUser(currentUser);
+                    onFirebaseChanged();
+                } else {
+                    for(String item:currentUser.getSynchronizedUsers()){
+                        if(dataSnapshot.getKey().equals(item)){
+                            prefHelper.saveUser(getModel(dataSnapshot));
+                            onFirebaseChanged();
                         }
                     }
-
-                    @Override
-                    public void onFinish(DatabaseReference databaseReference) {
-
-                    }
-                });
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
+                    currentUser = getModel(dataSnapshot);
+                    prefHelper.saveUser(currentUser);
+                    onFirebaseChanged();
+                } else {
+                    for(String item:currentUser.getSynchronizedUsers()){
+                        if(dataSnapshot.getKey().equals(item)){
+                            prefHelper.saveUser(getModel(dataSnapshot));
+                            onFirebaseChanged();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -132,4 +156,36 @@ public abstract class HelperActivity extends AppCompatActivity {
     }
 
     public abstract void onFirebaseChanged();
+
+    private UserModel getModel(DataSnapshot dataSnapshot){
+        UserModel userModel = new UserModel();
+        if (dataSnapshot.hasChild("uid")) {
+            userModel.setUid(dataSnapshot.child("uid").getValue().toString());
+        }
+        if (dataSnapshot.hasChild("phoneNumber")) {
+            userModel.setPhoneNumber(dataSnapshot.child("phoneNumber").getValue().toString());
+        }
+        if (dataSnapshot.hasChild("userName")) {
+            userModel.setUserName(dataSnapshot.child("userName").getValue().toString());
+        }
+        if (dataSnapshot.hasChild("inviteCode")) {
+            userModel.setInviteCode(dataSnapshot.child("inviteCode").getValue().toString());
+        }
+        if (dataSnapshot.hasChild("photoUrl")) {
+            userModel.setPhotoUrl(dataSnapshot.child("photoUrl").getValue().toString());
+        }
+        List<String> usersSynced = new ArrayList<>();
+        if (dataSnapshot.hasChild("synchronizedUsers")) {
+            for (DataSnapshot item : dataSnapshot.child("synchronizedUsers").getChildren()) {
+                usersSynced.add(item.getValue().toString());
+            }
+        }
+        userModel.setSynchronizedUsers(usersSynced);
+        DeviceStatus deviceStatus = new DeviceStatus();
+        if(dataSnapshot.hasChild("deviceStatus")){
+            deviceStatus = dataSnapshot.child("deviceStatus").getValue(DeviceStatus.class);
+        }
+        userModel.setDeviceStatus(deviceStatus);
+        return userModel;
+    }
 }

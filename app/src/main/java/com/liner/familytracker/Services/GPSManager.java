@@ -3,8 +3,12 @@ package com.liner.familytracker.Services;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
@@ -21,77 +25,58 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.liner.familytracker.Utils.Helper;
+import com.liner.familytracker.Utils.PreferenceManager;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class GPSManager implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.LocationListener {
-    private Location lastKnowLocation, currentLocation;
+    private String TAG = getClass().getSimpleName();
     public GoogleApiClient googleApiClient;
     private Context context;
     private GPSManagerListener gpsManagerListener;
+    private LocationManager locationManager;
 
     public GPSManager(Context context, GPSManagerListener gpsManagerListener){
         this.context = context;
         this.gpsManagerListener = gpsManagerListener;
     }
 
-    public void startLocationByGMS(){
-        googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
-            @Override
-            public void onGranted() {
-                googleApiClient.connect();
-            }
-
-        });
-    }
 
     @SuppressLint("MissingPermission")
-    public void startLocationByGPS(){
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if(isNETEnabled() && isGPSEnabled()){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    10000,
-                    10,
-                    this);
-            lastKnowLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else if(isNETEnabled()){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    10000,
-                    10,
-                    this);
-            lastKnowLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } else {
-            startLocationByGMS();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    public void startLocationBySIM(){
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if(telephonyManager != null){
-            if ((telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) || (telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_CDMA)) {
-                final CellLocation location = telephonyManager.getCellLocation();
-                if (location != null) {
-                    if (location instanceof GsmCellLocation) {
-                        GsmCellLocation gsmLoc = (GsmCellLocation) location;
-                        Log.i("TAGTAG", "Detected cell LAC: " + gsmLoc.getLac() + " CID: " + gsmLoc.getCid());
-                        //cell = new CellLogEntry(gsmLoc.getCid(), gsmLoc.getLac());
-                    } else if (location instanceof CdmaCellLocation) {
-                        CdmaCellLocation cdmaLoc = (CdmaCellLocation) location;
-                        Log.i("TAGTAG", "Detected cell NID: " + cdmaLoc.getNetworkId() + " BID: " + cdmaLoc.getBaseStationId());
-                        //cell = new CellLogEntry(cdmaLoc.getBaseStationId(), cdmaLoc.getNetworkId());
+    public void startLocationListen(){
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            if(isGPSEnabled()){
+                Log.i(TAG, "GPS Provider");
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        10000,
+                        10,
+                        this);
+            } else if(isNETEnabled()){
+                Log.i(TAG, "NETWORK Provider");
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        10000,
+                        10,
+                        this);
+            } else {
+                Log.i(TAG, "GOOGLE API Provider");
+                googleApiClient = new GoogleApiClient.Builder(context)
+                        .addApi(LocationServices.API)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .build();
+                Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
+                    @Override
+                    public void onGranted() {
+                        googleApiClient.connect();
                     }
-                } else {
-                    Log.i("TAGTAG", "Unknown phone type " + telephonyManager.getPhoneType());
-                }
-            }
 
-        }
+                });
+            }
     }
 
     @Override
@@ -120,7 +105,6 @@ public class GPSManager implements GoogleApiClient.ConnectionCallbacks, GoogleAp
                 googleApiClient.disconnect();
             }
         }
-        startLocationBySIM();
     }
 
     @Override
@@ -159,4 +143,16 @@ public class GPSManager implements GoogleApiClient.ConnectionCallbacks, GoogleAp
         void onLocationReceived(Location location);
     }
 
+
+
+    public void stopLocationListening(){
+        if(googleApiClient != null){
+            if(googleApiClient.isConnected()){
+                googleApiClient.disconnect();
+            }
+        }
+        if (locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
+    }
 }
