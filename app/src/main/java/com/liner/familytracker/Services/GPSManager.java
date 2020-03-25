@@ -50,41 +50,67 @@ public class GPSManager implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     @SuppressLint("MissingPermission")
     public void startLocationListen(){
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            if(isGPSEnabled()){
-                Log.i(TAG, "GPS Provider");
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        10000,
-                        10,
-                        this);
-            } else if(isNETEnabled()){
-                Log.i(TAG, "NETWORK Provider");
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        10000,
-                        10,
-                        this);
-            } else {
-                Log.i(TAG, "GOOGLE API Provider");
-                googleApiClient = new GoogleApiClient.Builder(context)
-                        .addApi(LocationServices.API)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .build();
-                Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
-                    @Override
-                    public void onGranted() {
-                        googleApiClient.connect();
-                    }
-
-                });
+            //if(isGPSEnabled()){
+            //    //Log.i(TAG, "GPS Provider");
+            //    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+            //    //        5000,
+            //    //        5,
+            //    //        this);
+            //    Log.i(TAG, "GOOGLE API Provider");
+            //    googleApiClient = new GoogleApiClient.Builder(context)
+            //            .addApi(LocationServices.API)
+            //            .addConnectionCallbacks(this)
+            //            .addOnConnectionFailedListener(this)
+            //            .build();
+            //    Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
+            //        @Override
+            //        public void onGranted() {
+            //            googleApiClient.connect();
+            //        }
+//
+            //    });
+            //} else if(isNETEnabled()){
+            //    Log.i(TAG, "NETWORK Provider");
+            //    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+            //            5000,
+            //            5,
+            //            this);
+            //} else {
+            //    Log.i(TAG, "GOOGLE API Provider");
+            //    googleApiClient = new GoogleApiClient.Builder(context)
+            //            .addApi(LocationServices.API)
+            //            .addConnectionCallbacks(this)
+            //            .addOnConnectionFailedListener(this)
+            //            .build();
+            //    Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
+            //        @Override
+            //        public void onGranted() {
+            //            googleApiClient.connect();
+            //        }
+//
+            //    });
+            //}
+        Log.i(TAG, "GOOGLE API Provider");
+        googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        Permissions.check(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, null, null, new PermissionHandler() {
+            @Override
+            public void onGranted() {
+                googleApiClient.connect();
             }
+
+        });
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest request = LocationRequest.create();
-        request.setInterval(10000);
+        request.setInterval(5000);
         request.setFastestInterval(1000);
-        request.setSmallestDisplacement(10);
+        request.setSmallestDisplacement(5);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, this);
     }

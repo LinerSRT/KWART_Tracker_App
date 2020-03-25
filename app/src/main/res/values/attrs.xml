@@ -48,4 +48,11 @@
         <attr name="sp_parallax" format="float|reference"/>
     </declare-styleable>
 
+    <declare-styleable name="StatusIconView">
+        <attr name="si_icon" format="reference" />
+        <attr name="si_enabled" format="boolean|reference" />
+        <attr name="si_check_icon" format="reference"/>
+        <attr name="si_uncheck_icon" format="reference"/>
+    </declare-styleable>
+
 </resources>

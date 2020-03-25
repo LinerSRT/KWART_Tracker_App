@@ -14,6 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +29,7 @@ import com.liner.familytracker.DatabaseModels.DeviceStatus;
 import com.liner.familytracker.DatabaseModels.UserModel;
 import com.liner.familytracker.R;
 import com.liner.familytracker.Services.ControllerServiceUtils;
+import com.liner.familytracker.Utils.MapMarkerUtils;
 import com.liner.familytracker.Utils.PrefHelper;
 import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.squareup.picasso.Picasso;
@@ -38,7 +44,7 @@ public class SyncMemberAdapter extends Adapter<SyncMemberAdapter.ViewHolder> imp
     private List<UserModel> usersModels;
     private PrefHelper prefHelper;
     private List<String> syncUsersList;
-
+    private Marker userMarker;
     public SyncMemberAdapter(Context context, List<String> users) {
         this.context = context;
         prefHelper = new PrefHelper(context);
@@ -137,7 +143,6 @@ public class SyncMemberAdapter extends Adapter<SyncMemberAdapter.ViewHolder> imp
     class ViewHolder extends RecyclerView.ViewHolder{
         ImageView memberPhoto;
         TextView memberName, memberLocationAdress, memberBattery, networkStatus, lastLocationUpdate;
-        ImageButton moveMap;
         ViewHolder(final View view) {
             super(view);
             memberPhoto = view.findViewById(R.id.memberPhoto);
@@ -146,7 +151,6 @@ public class SyncMemberAdapter extends Adapter<SyncMemberAdapter.ViewHolder> imp
             memberBattery = view.findViewById(R.id.memberBatteryLevel);
             networkStatus = view.findViewById(R.id.networkStatus);
             lastLocationUpdate = view.findViewById(R.id.lastLocationUpdateTime);
-            moveMap = view.findViewById(R.id.moveMap);
         }
     }
 

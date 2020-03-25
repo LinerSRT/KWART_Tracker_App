@@ -17,8 +17,16 @@ public class UserModel {
     private DeviceStatus deviceStatus;
     private String finishedReg;
     private List<String> synchronizedUsers;
+    private long lastUpdateTime;
 
 
+    public long getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
 
     public UserModel() {
     }

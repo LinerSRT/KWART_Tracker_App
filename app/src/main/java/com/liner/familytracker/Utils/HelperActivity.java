@@ -46,7 +46,7 @@ public abstract class HelperActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         usersDatabase = firebaseDatabase.getReference().child("Users");
         if(prefHelper.isUserExist(firebaseUser.getUid())){
-            currentUser = prefHelper.getUser(preferenceManager.getString("user_uid", "null"));
+            currentUser = prefHelper.getUser(firebaseUser.getUid());
         } else {
             Helper.getUserModel(new HelperListener() {
                 @Override
@@ -164,6 +164,9 @@ public abstract class HelperActivity extends AppCompatActivity {
         }
         if (dataSnapshot.hasChild("phoneNumber")) {
             userModel.setPhoneNumber(dataSnapshot.child("phoneNumber").getValue().toString());
+        }
+        if (dataSnapshot.hasChild("userEmail")) {
+            userModel.setUserEmail(dataSnapshot.child("userEmail").getValue().toString());
         }
         if (dataSnapshot.hasChild("userName")) {
             userModel.setUserName(dataSnapshot.child("userName").getValue().toString());

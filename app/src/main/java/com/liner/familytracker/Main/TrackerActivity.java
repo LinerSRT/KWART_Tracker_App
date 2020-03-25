@@ -1,127 +1,230 @@
 package com.liner.familytracker.Main;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DatabaseReference;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.liner.familytracker.DatabaseModels.UserModel;
+import com.liner.familytracker.Invite.InviteActivity;
 import com.liner.familytracker.R;
 import com.liner.familytracker.Services.ControllerService;
 import com.liner.familytracker.SplashActivity;
 import com.liner.familytracker.Utils.Adapters.SyncMemberAdapter;
 import com.liner.familytracker.Utils.Helper;
 import com.liner.familytracker.Utils.HelperActivity;
-import com.liner.familytracker.Utils.HelperListener;
+import com.liner.familytracker.Utils.MapMarkerUtils;
+import com.liner.familytracker.Views.LMapFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class TrackerActivity extends HelperActivity implements OnMapReadyCallback {
-    private RecyclerView memberRecyclerView;
-    private SyncMemberAdapter syncMemberAdapter;
-    private ImageButton addNewMemberBtn, moreBtn, test;
-    private ArrayList<UserModel> userModels;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    private GoogleMap mMap;
+public class TrackerActivity extends HelperActivity implements OnMapReadyCallback {
+    //Map
+    private GoogleMap googleMap;
+    private ImageButton findMyLocationBtn, mapStyleBtn, refreshDataBtn;
+    
+    //Main
+    private NestedScrollView mainScroll;
+    private ImageButton settingsBtn;
+    private RecyclerView peopleRecyclerView;
+    
+    //Profile
+    private CircleImageView profilePhoto;
+    private TextView profileName, profileEmail;
+    private ImageButton addNewPeopleBtn, shareCodeBtn, profileMoreBtn, profileLogoutBtn;
+   
+   
+
 
     private LatLng latLng = new LatLng(0, 0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracker);
-        startService(new Intent(this, ControllerService.class));
-        memberRecyclerView = findViewById(R.id.memberRecycler);
-        addNewMemberBtn = findViewById(R.id.addNewMember);
-        test = findViewById(R.id.refreshData);
-        test.setOnClickListener(new View.OnClickListener() {
+        if(!ControllerService.isServiceRunning(this)){
+            ContextCompat.startForegroundService(this, new Intent(this, ControllerService.class));
+        }
+        findMyLocationBtn = findViewById(R.id.mapFindMyLocationBtn);
+        mapStyleBtn = findViewById(R.id.mapStyleSwitch);
+        refreshDataBtn = findViewById(R.id.refreshMapView);
+        
+        mainScroll = findViewById(R.id.nestedScroll);
+        settingsBtn = findViewById(R.id.settingsButton);
+        peopleRecyclerView = findViewById(R.id.memberRecycler);
+        
+        profilePhoto = findViewById(R.id.profilePhoto);
+        profileName = findViewById(R.id.profileName);
+        profileEmail = findViewById(R.id.profileEmail);
+        profileLogoutBtn = findViewById(R.id.logout);
+        addNewPeopleBtn = findViewById(R.id.addPeopleBtn);
+        shareCodeBtn = findViewById(R.id.shareCodeBtn);
+        profileMoreBtn = findViewById(R.id.profileMore);
+        
+        mainScroll.getParent().requestChildFocus(mainScroll, mainScroll);
+        
+        peopleRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(TrackerActivity.this, InviteCodeActivity.class));
+                startActivity(new Intent(TrackerActivity.this, SettingsActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
-        moreBtn = findViewById(R.id.moreSettings);
-        moreBtn.setOnClickListener(new View.OnClickListener() {
+        
+        refreshDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                application.onFirebaseChanged();
+            }
+        });
+        
+        shareCodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TrackerActivity.this, InviteActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        });
+        
+        profileLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 firebaseAuth.signOut();
                 startActivity(new Intent(TrackerActivity.this, SplashActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
-        addNewMemberBtn.setOnClickListener(new View.OnClickListener() {
+        
+        addNewPeopleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                application.onFirebaseChanged();
                 startActivity(new Intent(TrackerActivity.this, AddNewMemberActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
-
-
-
-        MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapView));
-        map.getMapAsync(this);
-
-
-        setupMemberRecycler();
-
-
-
-
-
-
-
-
-
+        
+        if (googleMap == null) {
+            SupportMapFragment mapFragment = (LMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView);
+            mapFragment.getMapAsync(this);
+        }
+        updateValue();
+    }
+    @Override
+    public void onFirebaseChanged() {
+        updateValue();
 
     }
 
-    private int size = 0;
-    @Override
-    public void onFirebaseChanged() {
-        setupMemberRecycler();
-        if(mMap != null){
-            latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
-            //MarkerOptions marker = new MarkerOptions().position(latLng).title("Anuradha Rajashekar");
-            ////marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_on_black_24dp));
-            //mMap.addMarker(marker);
-            // mMap.addMarker(new MarkerOptions().position(sydney).title("Anuradha's location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-
-      /*  LatLng location2 = new LatLng(37.402276,-121.942161);
-        mMap.addMarker(new MarkerOptions().position(location2).title("Anuradha's new location"));
-       mMap.moveCamera(CameraUpdateFactory.newLatLng(location2));*/
-
-            //zoom into a particular position
-            CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
-            mMap.moveCamera(zoom);
-            mMap.animateCamera(zoom);
+    private void updateValue(){
+        if(currentUser != null) {
+            peopleRecyclerView.setAdapter(new SyncMemberAdapter(TrackerActivity.this, currentUser.getSynchronizedUsers()));
+            if (currentUser.getUserEmail() != null)
+                profileEmail.setText(currentUser.getUserEmail());
+            if (currentUser.getPhotoUrl() != null)
+                Picasso.with(this).load(currentUser.getPhotoUrl()).into(profilePhoto);
+            else
+                profilePhoto.setImageResource(R.drawable.user_profile_temp);
+            if (currentUser.getUserName() != null)
+                profileName.setText(currentUser.getUserName());
+            if(googleMap != null){
+                googleMap.clear();
+                latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
+                createUserMarker(prefHelper.getUser(firebaseUser.getUid()));
+                for(String item:currentUser.getSynchronizedUsers()){
+                    if(prefHelper.isUserExist(item)){
+                        createUserMarker(prefHelper.getUser(item));
+                    }
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                googleMap.animateCamera(CameraUpdateFactory.zoomTo(17), 1000, null);
+            }
         }
     }
 
-    private void setupMemberRecycler(){
-        SyncMemberAdapter syncMemberAdapter = new SyncMemberAdapter(TrackerActivity.this, currentUser.getSynchronizedUsers());
-        memberRecyclerView.setAdapter(syncMemberAdapter);
-        memberRecyclerView.setLayoutManager(new LinearLayoutManager(TrackerActivity.this, LinearLayoutManager.VERTICAL, false));
-        memberRecyclerView.smoothScrollToPosition(0);
+
+    private void createUserMarker(final UserModel model){
+        if(model.getPhotoUrl() != null) {
+            MapMarkerUtils.createUserMarker(this, model.getPhotoUrl(), new MapMarkerUtils.IListener() {
+                @Override
+                public void onMarkerReady(Bitmap bitmap) {
+                    MarkerOptions options = new MarkerOptions().position(new LatLng(model.getDeviceStatus().getLocationLat(), model.getDeviceStatus().getLocationLon()));
+                    options.title(model.getUserName());
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    CircleOptions co = new CircleOptions();
+                    co.center(new LatLng(model.getDeviceStatus().getLocationLat(), model.getDeviceStatus().getLocationLon()));
+                    co.radius(model.getDeviceStatus().getLocationAccuracy());
+                    co.fillColor(Color.parseColor("#602f90e5"));
+                    co.strokeColor(Color.parseColor("#BBBBBB"));
+                    co.strokeWidth(2.0f);
+                    googleMap.addCircle(co);
+                    googleMap.addMarker(options);
+                }
+            });
+        } else {
+            MapMarkerUtils.createUserMarker(this, BitmapFactory.decodeResource(getResources(), R.drawable.user_profile_temp), new MapMarkerUtils.IListener() {
+                @Override
+                public void onMarkerReady(Bitmap bitmap) {
+                    MarkerOptions options = new MarkerOptions().position(new LatLng(model.getDeviceStatus().getLocationLat(), model.getDeviceStatus().getLocationLon()));
+                    options.title(model.getUserName());
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    CircleOptions co = new CircleOptions();
+                    co.center(new LatLng(model.getDeviceStatus().getLocationLat(), model.getDeviceStatus().getLocationLon()));
+                    co.radius(model.getDeviceStatus().getLocationAccuracy());
+                    co.fillColor(Color.parseColor("#602f90e5"));
+                    co.strokeColor(Color.parseColor("#BBBBBB"));
+                    co.strokeWidth(2.0f);
+                    googleMap.addCircle(co);
+                    googleMap.addMarker(options);
+                }
+            });
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        this.googleMap = googleMap;
+        this.googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        this.googleMap.getUiSettings().setMapToolbarEnabled(true);
+        this.googleMap.getUiSettings().setCompassEnabled(true);
+        ((LMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView)).setListener(new LMapFragment.OnTouchListener() {
+            @Override
+            public void onTouch() {
+                mainScroll.requestDisallowInterceptTouchEvent(true);
+            }
+        });
+        this.googleMap.clear();
+        latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
+        createUserMarker(prefHelper.getUser(firebaseUser.getUid()));
+        for(String item:currentUser.getSynchronizedUsers()){
+            if(prefHelper.isUserExist(item)){
+                createUserMarker(prefHelper.getUser(item));
+            }
+        }
     }
 
     @Override
