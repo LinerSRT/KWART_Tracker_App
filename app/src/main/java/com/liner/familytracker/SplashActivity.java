@@ -1,6 +1,7 @@
 package com.liner.familytracker;
 
 import android.animation.Animator;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -67,7 +68,12 @@ public class SplashActivity extends AppCompatActivity {
     boolean registerPhoneFieldCorrect = false;
 
     boolean permissionGranted = false;
-
+    private boolean isUsageStatsGranted(){
+        AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,11 +160,11 @@ public class SplashActivity extends AppCompatActivity {
         Permissions.check(this, permissions, null, null, new PermissionHandler() {
             @Override
             public void onGranted() {
-                permissionGranted = true;
+                permissionGranted = isUsageStatsGranted();
+
             }
         });
         if(permissionGranted){
-
             if(firebaseAuth.getCurrentUser() != null && !firebaseAuth.getCurrentUser().isAnonymous()){
                 checkCurrentUser();
             } else {

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:id="@+id/main_layout"
     android:animateLayoutChanges="true"
     android:gravity="center"
     android:fitsSystemWindows="true"
@@ -15,7 +14,6 @@
     tools:context=".SplashActivity">
 
     <LinearLayout
-        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -29,7 +27,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/logoView"
             android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:src="@drawable/app_drawable" />
@@ -45,7 +42,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/appDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

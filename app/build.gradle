@@ -67,5 +67,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.afollestad.material-dialogs:commons:0.9.2.3'
     implementation "com.mlsdev.animatedrv:library:2.0.0"
+    implementation 'com.github.quentin7b:android-location-tracker:3.2'
 }
 apply plugin: 'com.google.gms.google-services'

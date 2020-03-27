@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/registerProgress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="5dp"
@@ -50,7 +49,6 @@
 
 
         <TextView
-            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -75,7 +73,6 @@
             tools:layout_editor_absoluteX="20dp" />
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -90,7 +87,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/relativeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

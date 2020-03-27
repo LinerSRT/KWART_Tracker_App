@@ -1,9 +1,11 @@
 package com.liner.familytracker.Invite;
 
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.liner.familytracker.R;
+import com.liner.familytracker.Services.AppTracker;
 import com.liner.familytracker.SplashActivity;
 import com.liner.familytracker.Utils.HelperActivity;
 import com.nabinbhandari.android.permissions.PermissionHandler;
@@ -27,10 +30,12 @@ public class InviteActivity extends AppCompatActivity {
     private TextView permissionTitle, permissionDesc, permissionDescSecond;
     private Button allowBtn;
     private boolean allGranted = true;
+    private AppTracker appTracker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.invite_layout);
+        appTracker = new AppTracker(this);
         permissionIcon = findViewById(R.id.permissionIcon);
         permissionTitle = findViewById(R.id.permissionTitle);
         permissionDesc = findViewById(R.id.permissionDesc);
@@ -54,6 +59,7 @@ public class InviteActivity extends AppCompatActivity {
     }
 
     private void checkPermissions(){
+        //allGranted = isUsageStatsGranted();
         String[] permissions = new String[]{
                 "android.permission.ACCESS_COARSE_LOCATION"
                 ,"android.permission.ACCESS_FINE_LOCATION"
@@ -100,7 +106,7 @@ public class InviteActivity extends AppCompatActivity {
                                 Permissions.check(InviteActivity.this,  new String[] {"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION" }, null, null, new PermissionHandler() {
                                     @Override
                                     public void onGranted() {
-                                        recreate();
+                                        //recreate();
                                     }
 
                                     @Override
@@ -139,7 +145,28 @@ public class InviteActivity extends AppCompatActivity {
         if(allGranted){
             startActivity(new Intent(this, SplashActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
+        } else {
+            //permissionIcon.setImageResource(R.drawable.ic_settings_applications_black_24dp);
+            //permissionTitle.setText("Статистика приложений");
+            //permissionDesc.setText("Нам требуется доступ к статистике приложений*");
+            //permissionDescSecond.setText("*Используется для получения информации о запущенных приложениях и частоте их использования");
+            //allowBtn.setOnClickListener(new View.OnClickListener() {
+            //    @Override
+            //    public void onClick(View view) {
+            //        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            //        recreate();
+            //    }
+            //});
         }
 
     }
+
+    private boolean isUsageStatsGranted(){
+        AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+
 }

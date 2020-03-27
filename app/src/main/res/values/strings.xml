@@ -1,8 +1,4 @@
 <resources>
-    <string name="app_name">FriendsAndFamilyLocator</string>
-    <string name="position_mobile_network_search_path">https://api.mylnikov.org/mobile/main.py/get?v=1.2&amp;app=locator.mylnikov.org</string>
-    <string name="position_mobile_network_search_path_no_geocoding">https://api.mylnikov.org/mobile/main.py/get?v=1.1&amp;app=locator.mylnikov.org</string>
-    <string name="position_wifi_search_path">https://api.mylnikov.org/wifi/main.py/get?v=1.2&amp;app=locator.mylnikov.org</string>
-    <string name="position_wifi_search_path_no_geocoding">https://api.mylnikov.org/wifi/main.py/get?v=1.1&amp;app=locator.mylnikov.org</string>
+    <string name="app_name">Locator</string>
 
 </resources>

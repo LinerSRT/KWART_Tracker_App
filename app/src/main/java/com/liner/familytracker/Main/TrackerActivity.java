@@ -62,7 +62,6 @@ public class TrackerActivity extends HelperActivity implements OnMapReadyCallbac
    
 
 
-    private LatLng latLng = new LatLng(0, 0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +106,7 @@ public class TrackerActivity extends HelperActivity implements OnMapReadyCallbac
         shareCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(TrackerActivity.this, InviteActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                startActivity(new Intent(TrackerActivity.this, ShareCodeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
         
@@ -151,7 +150,7 @@ public class TrackerActivity extends HelperActivity implements OnMapReadyCallbac
                 profileName.setText(currentUser.getUserName());
             if(googleMap != null){
                 googleMap.clear();
-                latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
+                LatLng latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
                 createUserMarker(prefHelper.getUser(firebaseUser.getUid()));
                 for(String item:currentUser.getSynchronizedUsers()){
                     if(prefHelper.isUserExist(item)){
@@ -218,7 +217,7 @@ public class TrackerActivity extends HelperActivity implements OnMapReadyCallbac
             }
         });
         this.googleMap.clear();
-        latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
+        LatLng latLng = new LatLng(currentUser.getDeviceStatus().getLocationLat(), currentUser.getDeviceStatus().getLocationLon());
         createUserMarker(prefHelper.getUser(firebaseUser.getUid()));
         for(String item:currentUser.getSynchronizedUsers()){
             if(prefHelper.isUserExist(item)){
